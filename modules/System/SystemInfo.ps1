@@ -39,4 +39,14 @@ function Get-SystemInformation
     Write-Log `
         -Message "Processor: $($Processor.Name)" `
         -Level INFO
+
+    Write-Log `
+        -Message "CPU Cores: $($Processor.NumberOfCores)" `
+        -Level INFO
+
+    Write-Log `
+        -Message "CPU Threads: $($Processor.NumberOfLogicalProcessors)" `
+        -Level INFO       
+
+
 }
