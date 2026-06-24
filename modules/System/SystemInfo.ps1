@@ -46,7 +46,15 @@ function Get-SystemInformation
 
     Write-Log `
         -Message "CPU Threads: $($Processor.NumberOfLogicalProcessors)" `
-        -Level INFO       
+        -Level INFO 
+    
+    # Calculate system uptime from the last boot time.
 
+    $Uptime = (Get-Date) - $OperatingSystem.LastBootUpTime
 
+    Write-Log `
+        -Message "System Uptime: $($Uptime.Days) days, $($Uptime.Hours) hours, $($Uptime.Minutes) minutes" `
+        -Level INFO
 }
+
+
