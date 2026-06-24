@@ -7,6 +7,7 @@ function Get-SystemInformation
 
     $OperatingSystem = Get-CimInstance Win32_OperatingSystem
     $ComputerSystem = Get-CimInstance Win32_ComputerSystem
+    $Processor = Get-CimInstance Win32_Processor
 
     Write-Log `
         -Message "Computer Name: $ComputerName" `
@@ -33,5 +34,9 @@ function Get-SystemInformation
 
     Write-Log `
         -Message "Installed RAM: $TotalRAM GB" `
+        -Level INFO
+
+    Write-Log `
+        -Message "Processor: $($Processor.Name)" `
         -Level INFO
 }
