@@ -4,8 +4,10 @@ function Write-Log
     # Supports INFO, SUCCESS, WARNING and ERROR severity levels.
 
     param(
+        [Parameter(Mandatory)]
         [string]$Message,
 
+        [Parameter(Mandatory)]
         [ValidateSet("INFO","SUCCESS","WARNING","ERROR")]
         [string]$Level
     )
