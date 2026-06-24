@@ -10,6 +10,7 @@ function Show-MainMenu
         Write-Host "================================"
         Write-Host ""
         Write-Host "1. System Information"
+        Write-Host "2. Network Information"
         Write-Host "0. Exit"
         Write-Host ""
 
@@ -20,6 +21,14 @@ function Show-MainMenu
             "1"
             {
                 Get-SystemInformation
+
+                Write-Host ""
+                Read-Host "Press Enter to return to the menu"
+            }
+
+            "2"
+            {
+                Get-NetworkInformation
 
                 Write-Host ""
                 Read-Host "Press Enter to return to the menu"
