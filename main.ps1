@@ -2,6 +2,7 @@
 
 . "$PSScriptRoot\modules\Core\AdminCheck.ps1"
 . "$PSScriptRoot\modules\Core\Logger.ps1"
+. "$PSScriptRoot\modules\Core\Menu.ps1"
 . "$PSScriptRoot\modules\System\SystemInfo.ps1"
 
 # Creates a unique log file for the current execution.
@@ -39,7 +40,6 @@ else
         -Level WARNING
 }
 
+# Display the main toolkit menu.
 
-# Collect and log basic system information.
-
-Get-SystemInformation
+Show-MainMenu
