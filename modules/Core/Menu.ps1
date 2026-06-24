@@ -1,9 +1,20 @@
+
+function Wait-Toolkit
+{
+    # Waits for user confirmation before returning to the menu.
+
+    Write-Host ""
+    Read-Host "Press Enter to return to the menu"
+}
+
 function Show-MainMenu
 {
     # Displays the main toolkit menu and handles user selection.
 
     do
     {
+        Clear-Host
+
         Write-Host ""
         Write-Host "================================"
         Write-Host "         OpeOpe Toolkit"
@@ -21,17 +32,13 @@ function Show-MainMenu
             "1"
             {
                 Get-SystemInformation
-
-                Write-Host ""
-                Read-Host "Press Enter to return to the menu"
+                Wait-Toolkit
             }
 
             "2"
             {
                 Get-NetworkInformation
-
-                Write-Host ""
-                Read-Host "Press Enter to return to the menu"
+                Wait-Toolkit
             }
 
             "0"
@@ -42,9 +49,7 @@ function Show-MainMenu
             default
             {
                 Write-Host "Invalid option"
-
-                Write-Host ""
-                Read-Host "Press Enter to continue"
+                Wait-Toolkit
             }
         }
 
