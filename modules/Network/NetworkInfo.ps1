@@ -43,11 +43,13 @@ function Get-NetworkInformation
         $InterfaceType = "Ethernet"
     }
 
-    # Collect valid IPv6 addresses.
+    # Collect IPv4 and IPv6 information.
 
-    $IPv6Addresses = $NetworkConfiguration.IPv6Address |
+    $IPv6Addresses = Get-NetIPAddress `
+        -InterfaceIndex $NetworkConfiguration.InterfaceIndex `
+        -AddressFamily IPv6 |
         Where-Object {
-            ![string]::IsNullOrWhiteSpace($_.IPAddress)
+            $_.IPAddress -ne "::1"
         }
 
     #
@@ -98,9 +100,18 @@ function Get-NetworkInformation
 
     foreach ($IPv6 in $IPv6Addresses)
     {
-        Write-Log `
-            -Message "IPv6 Address: $($IPv6.IPAddress)" `
-            -Level INFO
+        if ($IPv6.IPAddress.StartsWith("fe80:"))
+        {
+            Write-Log `
+                -Message "IPv6 Link-Local: $($IPv6.IPAddress)" `
+                -Level INFO
+        }
+        else
+        {
+            Write-Log `
+                -Message "IPv6 Global: $($IPv6.IPAddress)" `
+                -Level INFO
+        }
     }
 
     if ($null -ne $NetworkConfiguration.IPv4DefaultGateway)
