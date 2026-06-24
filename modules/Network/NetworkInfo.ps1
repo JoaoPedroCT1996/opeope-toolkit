@@ -9,8 +9,25 @@ function Get-NetworkInformation
         } |
         Select-Object -First 1
 
+    $NetworkAdapter = Get-NetAdapter |
+        Where-Object {
+            $_.InterfaceAlias -eq $NetworkConfiguration.InterfaceAlias
+        }
+
     Write-Log `
         -Message "Network Adapter: $($NetworkConfiguration.InterfaceAlias)" `
+        -Level INFO
+
+    Write-Log `
+        -Message "Adapter Status: $($NetworkAdapter.Status)" `
+        -Level INFO
+
+    Write-Log `
+        -Message "Link Speed: $($NetworkAdapter.LinkSpeed)" `
+        -Level INFO
+
+    Write-Log `
+        -Message "MAC Address: $($NetworkAdapter.MacAddress)" `
         -Level INFO
 
     Write-Log `
