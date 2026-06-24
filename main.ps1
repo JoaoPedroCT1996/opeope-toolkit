@@ -2,6 +2,7 @@
 
 . "$PSScriptRoot\modules\Core\AdminCheck.ps1"
 . "$PSScriptRoot\modules\Core\Logger.ps1"
+. "$PSScriptRoot\modules\System\SystemInfo.ps1"
 
 # Creates a unique log file for the current execution.
 # The log path is stored globally and shared across all modules.
@@ -37,3 +38,8 @@ else
         -Message "Toolkit running without administrator privileges" `
         -Level WARNING
 }
+
+
+# Collect and log basic system information.
+
+Get-SystemInformation
