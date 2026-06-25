@@ -22,6 +22,7 @@ function Show-MainMenu
         Write-Host ""
         Write-Host "1. System Information"
         Write-Host "2. Network Information"
+        Write-Host "3. Security Information"
         Write-Host "0. Exit"
         Write-Host ""
 
@@ -38,6 +39,12 @@ function Show-MainMenu
             "2"
             {
                 Get-NetworkInformation
+                Wait-Toolkit
+            }
+
+            "3"
+            {
+                Get-SecurityInformation
                 Wait-Toolkit
             }
 
