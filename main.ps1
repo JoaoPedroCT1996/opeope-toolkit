@@ -5,6 +5,7 @@
 . "$PSScriptRoot\modules\Core\Menu.ps1"
 . "$PSScriptRoot\modules\System\SystemInfo.ps1"
 . "$PSScriptRoot\modules\Network\NetworkInfo.ps1"
+. "$PSScriptRoot\modules\Security\SecurityInfo.ps1"
 
 # Creates a unique log file for the current execution.
 # The log path is stored globally and shared across all modules.
