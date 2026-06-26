@@ -43,6 +43,14 @@ function Get-SecurityInformation {
         $SecureBoot = $null
     }
 
+    try {
+        $MpComputerStatus = Get-MpComputerStatus `
+            -ErrorAction Stop
+    }
+    catch {
+        $MpComputerStatus = $null
+    }
+
     #
     # Antivirus
     #
@@ -168,4 +176,68 @@ function Get-SecurityInformation {
             -Message "Secure Boot: $(if ($SecureBoot) { "Enabled" } else { "Disabled" })" `
             -Level INFO
     }
+
+    #
+    # Microsoft Defender
+    #
+
+    if ($null -eq $MpComputerStatus) {
+        Write-Log `
+            -Message "Microsoft Defender information is unavailable" `
+            -Level WARNING
+    }
+    else {
+        Write-Log `
+            -Message "Running Mode: $($MpComputerStatus.AMRunningMode)" `
+            -Level INFO
+
+        Write-Log `
+            -Message "Service Enabled: $($MpComputerStatus.AMServiceEnabled)" `
+            -Level INFO
+
+        Write-Log `
+            -Message "Antivirus Enabled: $($MpComputerStatus.AntivirusEnabled)" `
+            -Level INFO
+
+        Write-Log `
+            -Message "Real-Time Protection: $($MpComputerStatus.RealTimeProtectionEnabled)" `
+            -Level INFO
+
+        Write-Log `
+            -Message "Behavior Monitoring: $($MpComputerStatus.BehaviorMonitorEnabled)" `
+            -Level INFO
+
+        Write-Log `
+            -Message "IOAV Protection: $($MpComputerStatus.IoavProtectionEnabled)" `
+            -Level INFO
+
+        Write-Log `
+            -Message "Tamper Protection: $($MpComputerStatus.IsTamperProtected)" `
+            -Level INFO
+
+        Write-Log `
+            -Message "Engine Version: $($MpComputerStatus.AMEngineVersion)" `
+            -Level INFO
+
+        Write-Log `
+            -Message "Product Version: $($MpComputerStatus.AMProductVersion)" `
+            -Level INFO
+
+        Write-Log `
+            -Message "Signature Version: $($MpComputerStatus.AntivirusSignatureVersion)" `
+            -Level INFO
+
+        Write-Log `
+            -Message "Signatures Out Of Date: $($MpComputerStatus.DefenderSignaturesOutOfDate)" `
+            -Level INFO
+
+        Write-Log `
+            -Message "Reboot Required: $($MpComputerStatus.RebootRequired)" `
+            -Level INFO
+    }
+
+
+
+
+
 }
