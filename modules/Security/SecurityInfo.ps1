@@ -35,6 +35,14 @@ function Get-SecurityInformation {
         $Tpm = $null
     }
 
+    try {
+        $SecureBoot = Confirm-SecureBootUEFI `
+            -ErrorAction Stop
+    }
+    catch {
+        $SecureBoot = $null
+    }
+
     #
     # Antivirus
     #
@@ -143,6 +151,21 @@ function Get-SecurityInformation {
 
         Write-Log `
             -Message "Manufacturer Version: $($Tpm.ManufacturerVersion)" `
+            -Level INFO
+    }
+
+    #
+    # Secure Boot
+    #
+
+    if ($null -eq $SecureBoot) {
+        Write-Log `
+            -Message "Secure Boot information is unavailable" `
+            -Level WARNING
+    }
+    else {
+        Write-Log `
+            -Message "Secure Boot: $(if ($SecureBoot) { "Enabled" } else { "Disabled" })" `
             -Level INFO
     }
 }
