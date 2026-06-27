@@ -91,7 +91,7 @@ function Get-SystemInformation {
             -ClassName Win32_LogicalDisk `
             -Filter "DriveType = 3" `
             -ErrorAction Stop |
-        Where-Object { $_.Size -gt 50GB }
+             Where-Object { $_.Size -gt 50GB }
     }
     catch {
         $LogicalDisks = $null
