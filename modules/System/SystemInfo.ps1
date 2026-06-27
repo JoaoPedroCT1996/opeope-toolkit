@@ -91,7 +91,7 @@ function Get-SystemInformation {
             -ClassName Win32_LogicalDisk `
             -Filter "DriveType = 3" `
             -ErrorAction Stop |
-             Where-Object { $_.Size -gt 50GB }
+            Where-Object { $_.Size -gt 50GB }
     }
     catch {
         $LogicalDisks = $null
@@ -157,7 +157,7 @@ function Get-SystemInformation {
     if ($null -ne $BaseBoard) {
 
         Write-Log `
-            -Message "Motherboard: $($BaseBoard.Product)" `
+            -Message "Motherboard: $($BaseBoard.Manufacturer) $($BaseBoard.Product)" `
             -Level INFO
     }
     else {
