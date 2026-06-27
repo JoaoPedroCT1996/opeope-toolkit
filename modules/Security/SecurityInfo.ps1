@@ -1,6 +1,10 @@
 function Get-SecurityInformation {
     # Collects security information for diagnostics and reporting.
 
+    #
+    # Antivirus
+    #
+
     try {
         $AntivirusProducts = Get-CimInstance `
             -Namespace ROOT\SecurityCenter2 `
@@ -11,6 +15,10 @@ function Get-SecurityInformation {
         $AntivirusProducts = $null
     }
 
+    #
+    # Firewall
+    #
+
     try {
         $FirewallProfiles = Get-NetFirewallProfile `
             -ErrorAction Stop
@@ -18,6 +26,10 @@ function Get-SecurityInformation {
     catch {
         $FirewallProfiles = $null
     }
+
+    #
+    # BitLocker
+    #
 
     try {
         $BitLockerVolumes = Get-BitLockerVolume `
@@ -27,6 +39,10 @@ function Get-SecurityInformation {
         $BitLockerVolumes = $null
     }
 
+    #
+    # TPM
+    #
+
     try {
         $Tpm = Get-Tpm `
             -ErrorAction Stop
@@ -34,6 +50,10 @@ function Get-SecurityInformation {
     catch {
         $Tpm = $null
     }
+
+    #
+    # Secure Boot
+    #
 
     try {
         $SecureBoot = Confirm-SecureBootUEFI `
@@ -43,6 +63,10 @@ function Get-SecurityInformation {
         $SecureBoot = $null
     }
 
+    #
+    # Microsoft Defender
+    #
+
     try {
         $MpComputerStatus = Get-MpComputerStatus `
             -ErrorAction Stop
@@ -50,6 +74,21 @@ function Get-SecurityInformation {
     catch {
         $MpComputerStatus = $null
     }
+
+    #
+    # Device Guard
+    #
+
+    try {
+        $DeviceGuard = Get-CimInstance `
+            -Namespace root\Microsoft\Windows\DeviceGuard `
+            -ClassName Win32_DeviceGuard `
+            -ErrorAction Stop
+    }
+    catch {
+        $DeviceGuard = $null
+    }
+
 
     #
     # Antivirus
@@ -236,8 +275,60 @@ function Get-SecurityInformation {
             -Level INFO
     }
 
+    #
+    # Device Guard
+    #
 
+    if ($null -eq $DeviceGuard) {
 
+        Write-Log `
+            -Message "Device Guard information is unavailable" `
+            -Level WARNING
+    }
+    else {
+
+        #
+        # Virtualization-Based Security
+        #
+
+        switch ($DeviceGuard.VirtualizationBasedSecurityStatus) {
+
+            0 { $VbsStatus = "Disabled" }
+            1 { $VbsStatus = "Enabled (Not Running)" }
+            2 { $VbsStatus = "Running" }
+
+            default { $VbsStatus = "Unknown" }
+        }
+
+        Write-Log `
+            -Message "Virtualization-Based Security: $VbsStatus" `
+            -Level INFO
+
+        #
+        # Code Integrity
+        #
+
+        switch ($DeviceGuard.CodeIntegrityPolicyEnforcementStatus) {
+
+            0 { $CodeIntegrity = "Disabled" }
+            1 { $CodeIntegrity = "Audit Mode" }
+            2 { $CodeIntegrity = "Enabled" }
+
+            default { $CodeIntegrity = "Unknown" }
+        }
+
+        Write-Log `
+            -Message "Code Integrity Policy: $CodeIntegrity" `
+            -Level INFO
+
+        #
+        # Virtual Machine Isolation
+        #
+
+        Write-Log `
+            -Message "Virtual Machine Isolation: $(if ($DeviceGuard.VirtualMachineIsolation) { "Enabled" } else { "Disabled" })" `
+            -Level INFO
+    }
 
 
 }
