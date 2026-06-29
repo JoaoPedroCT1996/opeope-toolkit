@@ -60,6 +60,74 @@ function Test-SystemHealth {
 
 function Test-StorageHealth {
     # Performs storage health checks.
+
+    try {
+        $LogicalDisks = Get-CimInstance `
+            -ClassName Win32_LogicalDisk `
+            -Filter "DriveType = 3" `
+            -ErrorAction Stop
+    }
+    catch {
+
+        Write-Log `
+            -Message "Unable to retrieve storage information." `
+            -Level WARNING
+
+        return
+    }
+
+    foreach ($Disk in $LogicalDisks) {
+
+        if ($Disk.Size -le 0) {
+
+            Write-Log `
+                -Message "Unable to determine storage capacity for drive $($Disk.DeviceID)." `
+                -Level WARNING
+
+            continue
+        }
+
+        $FreeSpaceGB = [math]::Round(
+            $Disk.FreeSpace / 1GB,
+            2
+        )
+
+        $FreePercentage = [math]::Round(
+            ($Disk.FreeSpace / $Disk.Size) * 100,
+            2
+        )
+
+        Write-Log `
+            -Message "Drive $($Disk.DeviceID) - Free Space: $FreeSpaceGB GB ($FreePercentage%)" `
+            -Level INFO
+
+        if ($FreePercentage -lt 10) {
+
+            Write-Log `
+                -Message "Health Status: CRITICAL" `
+                -Level WARNING
+
+            Write-Log `
+                -Message "Recommendation: Free disk space immediately." `
+                -Level INFO
+        }
+        elseif ($FreePercentage -lt 20) {
+
+            Write-Log `
+                -Message "Health Status: WARNING" `
+                -Level WARNING
+
+            Write-Log `
+                -Message "Recommendation: Consider cleaning unnecessary files." `
+                -Level INFO
+        }
+        else {
+
+            Write-Log `
+                -Message "Health Status: HEALTHY" `
+                -Level INFO
+        }
+    }
 }
 
 function Test-NetworkHealth {
